@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Board</title>
+    <style>
+        /* Style the chessboard */
+        table {
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        td {
+            width: 100px;
+            height: 100px;
+            font-size: 60px;
+            text-align: center;
+            vertical-align: middle;
+            cursor: grab;
+        }
+
+        td[bgcolor="grey"] {
+            background-color: #d6d6d6;
+        }
+
+        td[bgcolor="brown"] {
+            background-color: #b58863;
+        }
+
+        h1 {
+            font-family: Arial, sans-serif;
+            color: #444;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Highlight drop area */
+        .droppable {
+            outline: 3px dashed #ff9900;
+        }
+    </style>
+</head>
+
+<body>
+    <center>
+        <h1>Interactive Chess Board</h1>
+        <table border="75%">
+            <!-- Chessboard rows -->
+            <tr>
+                <td bgcolor="grey" draggable="true">♜</td>
+                <td bgcolor="brown" draggable="true">♞</td>
+                <td bgcolor="grey" draggable="true">♝</td>
+                <td bgcolor="brown" draggable="true">♛</td>
+                <td bgcolor="grey" draggable="true">♚</td>
+                <td bgcolor="brown" draggable="true">♝</td>
+                <td bgcolor="grey" draggable="true">♞</td>
+                <td bgcolor="brown" draggable="true">♜</td>
+            </tr>
+            <tr>
+                <td bgcolor="brown" draggable="true">♟</td>
+                <td bgcolor="grey" draggable="true">♟</td>
+                <td bgcolor="brown" draggable="true">♟</td>
+                <td bgcolor="grey" draggable="true">♟</td>
+                <td bgcolor="brown" draggable="true">♟</td>
+                <td bgcolor="grey" draggable="true">♟</td>
+                <td bgcolor="brown" draggable="true">♟</td>
+                <td bgcolor="grey" draggable="true">♟</td>
+            </tr>
+            <!-- Empty rows -->
+            <tr>
+                <td bgcolor="grey"></td>
+                <td bgcolor="brown"></td>
+                <td bgcolor="grey"></td>
+                <td bgcolor="brown"></td>
+                <td bgcolor="grey"></td>
+                <td bgcolor="brown"></td>
+                <td bgcolor="grey"></td>
+                <td bgcolor="brown"></td>
+            </tr>
+            <tr>
+                <td bgcolor="brown"></td>
+                <td bgcolor="grey"></td>
+                <td bgcolor="brown"></td>
+                <td bgcolor="grey"></td>
+                <td bgcolor="brown"></td>
+                <td bgcolor="grey"></td>
+                <td bgcolor="brown"></td>
+                <td bgcolor="grey"></td>
+            </tr>
+            <tr>
+                <td bgcolor="grey"></td>
+                <td bgcolor="brown"></td>
+                <td bgcolor="grey"></td>
+                <td bgcolor="brown"></td>
+                <td bgcolor="grey"></td>
+                <td bgcolor="brown"></td>
+                <td bgcolor="grey"></td>
+                <td bgcolor="brown"></td>
+            </tr>
+            <tr>
+                <td bgcolor="brown"></td>
+                <td bgcolor="grey"></td>
+                <td bgcolor="brown"></td>
+                <td bgcolor="grey"></td>
+                <td bgcolor="brown"></td>
+                <td bgcolor="grey"></td>
+                <td bgcolor="brown"></td>
+                <td bgcolor="grey"></td>
+            </tr>
+            <!-- Player 2 pieces -->
+            <tr>
+                <td bgcolor="grey" draggable="true">♙</td>
+                <td bgcolor="brown" draggable="true">♙</td>
+                <td bgcolor="grey" draggable="true">♙</td>
+                <td bgcolor="brown" draggable="true">♙</td>
+                <td bgcolor="grey" draggable="true">♙</td>
+                <td bgcolor="brown" draggable="true">♙</td>
+                <td bgcolor="grey" draggable="true">♙</td>
+                <td bgcolor="brown" draggable="true">♙</td>
+            </tr>
+            <tr>
+                <td bgcolor="brown" draggable="true">♖</td>
+                <td bgcolor="grey" draggable="true">♘</td>
+                <td bgcolor="brown" draggable="true">♗</td>
+                <td bgcolor="grey" draggable="true">♕</td>
+                <td bgcolor="brown" draggable="true">♔</td>
+                <td bgcolor="grey" draggable="true">♗</td>
+                <td bgcolor="brown" draggable="true">♘</td>
+                <td bgcolor="grey" draggable="true">♖</td>
+            </tr>
+        </table>
+    </center>
+
+    <script>
+        // Enable dragging and dropping functionality
+        const cells = document.querySelectorAll('td');
+
+        let draggedPiece = null;
+
+        cells.forEach(cell => {
+            // Drag start
+            cell.addEventListener('dragstart', event => {
+                draggedPiece = event.target;
+                setTimeout(() => draggedPiece.style.display = 'none', 0);
+            });
+
+            // Drag end
+            cell.addEventListener('dragend', () => {
+                draggedPiece.style.display = '';
+                draggedPiece = null;
+            });
+
+            // Drag over
+            cell.addEventListener('dragover', event => event.preventDefault());
+
+            // Drop
+            cell.addEventListener('drop', event => {
+                event.preventDefault();
+                if (event.target.tagName === 'TD' && !event.target.hasChildNodes()) {
+                    event.target.appendChild(draggedPiece);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
