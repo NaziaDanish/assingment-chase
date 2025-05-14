@@ -1,169 +1,218 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chess Board</title>
-    <style>
-        /* Style the chessboard */
-        table {
-            border-collapse: collapse;
-            margin-top: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Chess Board</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      margin-top: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
 
-        td {
-            width: 100px;
-            height: 100px;
-            font-size: 60px;
-            text-align: center;
-            vertical-align: middle;
-            cursor: grab;
-        }
+    td {
+      width: 80px;
+      height: 80px;
+      font-size: 48px;
+      text-align: center;
+      vertical-align: middle;
+      cursor: grab;
+    }
 
-        td[bgcolor="grey"] {
-            background-color: #d6d6d6;
-        }
+    td[bgcolor="grey"] {
+      background-color: #d6d6d6;
+    }
 
-        td[bgcolor="brown"] {
-            background-color: #b58863;
-        }
+    td[bgcolor="brown"] {
+      background-color: #b58863;
+    }
 
-        h1 {
-            font-family: Arial, sans-serif;
-            color: #444;
-            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
-        }
+    h1 {
+      font-family: Arial, sans-serif;
+      color: #444;
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+    }
 
-        /* Highlight drop area */
-        .droppable {
-            outline: 3px dashed #ff9900;
-        }
-    </style>
+    .highlight {
+      outline: 3px dashed orange;
+    }
+
+    #info {
+      font-family: Arial;
+      color: #333;
+      font-size: 18px;
+      margin-top: 10px;
+    }
+  </style>
 </head>
-
 <body>
-    <center>
-        <h1>Interactive Chess Board</h1>
-        <table border="75%">
-            <!-- Chessboard rows -->
-            <tr>
-                <td bgcolor="grey" draggable="true">♜</td>
-                <td bgcolor="brown" draggable="true">♞</td>
-                <td bgcolor="grey" draggable="true">♝</td>
-                <td bgcolor="brown" draggable="true">♛</td>
-                <td bgcolor="grey" draggable="true">♚</td>
-                <td bgcolor="brown" draggable="true">♝</td>
-                <td bgcolor="grey" draggable="true">♞</td>
-                <td bgcolor="brown" draggable="true">♜</td>
-            </tr>
-            <tr>
-                <td bgcolor="brown" draggable="true">♟</td>
-                <td bgcolor="grey" draggable="true">♟</td>
-                <td bgcolor="brown" draggable="true">♟</td>
-                <td bgcolor="grey" draggable="true">♟</td>
-                <td bgcolor="brown" draggable="true">♟</td>
-                <td bgcolor="grey" draggable="true">♟</td>
-                <td bgcolor="brown" draggable="true">♟</td>
-                <td bgcolor="grey" draggable="true">♟</td>
-            </tr>
-            <!-- Empty rows -->
-            <tr>
-                <td bgcolor="grey"></td>
-                <td bgcolor="brown"></td>
-                <td bgcolor="grey"></td>
-                <td bgcolor="brown"></td>
-                <td bgcolor="grey"></td>
-                <td bgcolor="brown"></td>
-                <td bgcolor="grey"></td>
-                <td bgcolor="brown"></td>
-            </tr>
-            <tr>
-                <td bgcolor="brown"></td>
-                <td bgcolor="grey"></td>
-                <td bgcolor="brown"></td>
-                <td bgcolor="grey"></td>
-                <td bgcolor="brown"></td>
-                <td bgcolor="grey"></td>
-                <td bgcolor="brown"></td>
-                <td bgcolor="grey"></td>
-            </tr>
-            <tr>
-                <td bgcolor="grey"></td>
-                <td bgcolor="brown"></td>
-                <td bgcolor="grey"></td>
-                <td bgcolor="brown"></td>
-                <td bgcolor="grey"></td>
-                <td bgcolor="brown"></td>
-                <td bgcolor="grey"></td>
-                <td bgcolor="brown"></td>
-            </tr>
-            <tr>
-                <td bgcolor="brown"></td>
-                <td bgcolor="grey"></td>
-                <td bgcolor="brown"></td>
-                <td bgcolor="grey"></td>
-                <td bgcolor="brown"></td>
-                <td bgcolor="grey"></td>
-                <td bgcolor="brown"></td>
-                <td bgcolor="grey"></td>
-            </tr>
-            <!-- Player 2 pieces -->
-            <tr>
-                <td bgcolor="grey" draggable="true">♙</td>
-                <td bgcolor="brown" draggable="true">♙</td>
-                <td bgcolor="grey" draggable="true">♙</td>
-                <td bgcolor="brown" draggable="true">♙</td>
-                <td bgcolor="grey" draggable="true">♙</td>
-                <td bgcolor="brown" draggable="true">♙</td>
-                <td bgcolor="grey" draggable="true">♙</td>
-                <td bgcolor="brown" draggable="true">♙</td>
-            </tr>
-            <tr>
-                <td bgcolor="brown" draggable="true">♖</td>
-                <td bgcolor="grey" draggable="true">♘</td>
-                <td bgcolor="brown" draggable="true">♗</td>
-                <td bgcolor="grey" draggable="true">♕</td>
-                <td bgcolor="brown" draggable="true">♔</td>
-                <td bgcolor="grey" draggable="true">♗</td>
-                <td bgcolor="brown" draggable="true">♘</td>
-                <td bgcolor="grey" draggable="true">♖</td>
-            </tr>
-        </table>
-    </center>
+  <center>
+    <h1>Interactive Chess Board</h1>
+    <div id="info">Pick a piece to begin your move.</div>
+    <table id="chessBoard" border="1"></table>
+  </center>
 
-    <script>
-        // Enable dragging and dropping functionality
-        const cells = document.querySelectorAll('td');
+  <script>
+    const pieces = [
+      ["♜","♞","♝","♛","♚","♝","♞","♜"],
+      ["♟","♟","♟","♟","♟","♟","♟","♟"],
+      ["","","","","","","",""],
+      ["","","","","","","",""],
+      ["","","","","","","",""],
+      ["","","","","","","",""],
+      ["♙","♙","♙","♙","♙","♙","♙","♙"],
+      ["♖","♘","♗","♕","♔","♗","♘","♖"]
+    ];
 
-        let draggedPiece = null;
+    const board = document.getElementById("chessBoard");
+    const info = document.getElementById("info");
 
-        cells.forEach(cell => {
-            // Drag start
-            cell.addEventListener('dragstart', event => {
-                draggedPiece = event.target;
-                setTimeout(() => draggedPiece.style.display = 'none', 0);
-            });
+    let draggedPiece = null;
+    let sourceCell = null;
 
-            // Drag end
-            cell.addEventListener('dragend', () => {
-                draggedPiece.style.display = '';
-                draggedPiece = null;
-            });
+    // Create chess board
+    for (let row = 0; row < 8; row++) {
+      const tr = document.createElement("tr");
+      for (let col = 0; col < 8; col++) {
+        const td = document.createElement("td");
+        td.dataset.row = row;
+        td.dataset.col = col;
 
-            // Drag over
-            cell.addEventListener('dragover', event => event.preventDefault());
+        td.setAttribute("bgcolor", (row + col) % 2 === 0 ? "grey" : "brown");
+        td.setAttribute("draggable", "true");
 
-            // Drop
-            cell.addEventListener('drop', event => {
-                event.preventDefault();
-                if (event.target.tagName === 'TD' && !event.target.hasChildNodes()) {
-                    event.target.appendChild(draggedPiece);
-                }
-            });
+        if (pieces[row][col]) {
+          td.textContent = pieces[row][col];
+        }
+
+        board.appendChild(tr);
+        tr.appendChild(td);
+
+        // Drag events
+        td.addEventListener("dragstart", e => {
+          draggedPiece = td.textContent;
+          sourceCell = td;
+
+          // Highlight valid moves
+          highlightMoves(draggedPiece, row, col);
+          info.textContent = getHint(draggedPiece);
+          setTimeout(() => td.textContent = "", 0);
         });
-    </script>
-</body>
 
+        td.addEventListener("dragover", e => e.preventDefault());
+
+        td.addEventListener("drop", e => {
+          e.preventDefault();
+          td.textContent = draggedPiece;
+          clearHighlights();
+          info.textContent = "Move completed!";
+        });
+
+        td.addEventListener("dragend", () => {
+          if (!sourceCell.textContent) sourceCell.textContent = draggedPiece;
+          clearHighlights();
+        });
+      }
+    }
+
+    function clearHighlights() {
+      document.querySelectorAll(".highlight").forEach(cell => {
+        cell.classList.remove("highlight");
+      });
+    }
+
+    function highlightMoves(piece, row, col) {
+      clearHighlights();
+      const moves = [];
+
+      if (piece === "♞" || piece === "♘") {
+        // Knight moves
+        const deltas = [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]];
+        deltas.forEach(([dr, dc]) => {
+          const r = row + dr;
+          const c = col + dc;
+          if (isInBounds(r, c)) {
+            board.rows[r].cells[c].classList.add("highlight");
+          }
+        });
+      }
+
+      if (piece === "♟" || piece === "♙") {
+        // Pawn: just move 1 step forward
+        const direction = piece === "♟" ? 1 : -1;
+        const r = row + direction;
+        if (isInBounds(r, col)) {
+          board.rows[r].cells[col].classList.add("highlight");
+        }
+      }
+
+      if (piece === "♖" || piece === "♜") {
+        // Rook: horizontal and vertical
+        for (let i = 0; i < 8; i++) {
+          if (i !== row) board.rows[i].cells[col].classList.add("highlight");
+          if (i !== col) board.rows[row].cells[i].classList.add("highlight");
+        }
+      }
+
+      if (piece === "♗" || piece === "♝") {
+        // Bishop: diagonals
+        for (let i = 1; i < 8; i++) {
+          if (isInBounds(row+i, col+i)) board.rows[row+i].cells[col+i].classList.add("highlight");
+          if (isInBounds(row+i, col-i)) board.rows[row+i].cells[col-i].classList.add("highlight");
+          if (isInBounds(row-i, col+i)) board.rows[row-i].cells[col+i].classList.add("highlight");
+          if (isInBounds(row-i, col-i)) board.rows[row-i].cells[col-i].classList.add("highlight");
+        }
+      }
+
+      if (piece === "♕" || piece === "♛") {
+        // Queen: rook + bishop
+        highlightMoves("♖", row, col);
+        highlightMoves("♗", row, col);
+      }
+
+      if (piece === "♔" || piece === "♚") {
+        // King: one step in any direction
+        for (let dr = -1; dr <= 1; dr++) {
+          for (let dc = -1; dc <= 1; dc++) {
+            if (dr === 0 && dc === 0) continue;
+            const r = row + dr, c = col + dc;
+            if (isInBounds(r, c)) {
+              board.rows[r].cells[c].classList.add("highlight");
+            }
+          }
+        }
+      }
+    }
+
+    function isInBounds(r, c) {
+      return r >= 0 && r < 8 && c >= 0 && c < 8;
+    }
+
+    function getHint(piece) {
+      switch (piece) {
+        case "♘":
+        case "♞":
+          return "Knight: Move in L-shape.";
+        case "♗":
+        case "♝":
+          return "Bishop: Move diagonally.";
+        case "♖":
+        case "♜":
+          return "Rook: Move straight (horizontal/vertical).";
+        case "♕":
+        case "♛":
+          return "Queen: Move in all directions.";
+        case "♔":
+        case "♚":
+          return "King: Move one square in any direction.";
+        case "♙":
+        case "♟":
+          return "Pawn: Move one step forward.";
+        default:
+          return "Unknown piece.";
+      }
+    }
+  </script>
+</body>
 </html>
